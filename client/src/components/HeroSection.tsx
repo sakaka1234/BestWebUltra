@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Spline from "@splinetool/react-spline";
-const HeroSection = () => {
+export const HeroSection = () => {
   return (
     <section
       className="min-h-screen bg-gradient-to-b from-sky-900 to-black flex xl:flex-row flex-col-reverse items-center justify-between
@@ -51,4 +51,3 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;

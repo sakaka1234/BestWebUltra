@@ -3,11 +3,11 @@ import Spline from "@splinetool/react-spline";
 import { FaLock, FaUser } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
 
-const Login = () => {
+export const Login = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative h-[100vh] overflow-hidden">
+    <div className="relative h-[100vh] overflow-hidden" >
       {/* Spline Background */}
       <div className="absolute inset-0 z-0">
         <Spline scene="https://prod.spline.design/NiwrewVXf8EJy7hj/scene.splinecode" />
@@ -111,4 +111,3 @@ const Login = () => {
   );
 };
 
-export default Login;
