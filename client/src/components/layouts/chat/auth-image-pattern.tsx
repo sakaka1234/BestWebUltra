@@ -3,7 +3,10 @@ interface AuthImagePatternProps {
   subtitle: string;
 }
 
-export const AuthImagePattern: React.FC<AuthImagePatternProps> = ({title, subtitle}) => {
+export const AuthImagePattern: React.FC<AuthImagePatternProps> = ({
+  title,
+  subtitle,
+}) => {
   return (
     <div className="hidden lg:flex items-center justify-center bg-base-200 p-12 bg-slate-950">
       <div className="w-3/5 text-center">
