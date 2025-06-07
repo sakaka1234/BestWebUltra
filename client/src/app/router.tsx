@@ -1,6 +1,5 @@
-
 import { createBrowserRouter } from "react-router-dom";
-
+import { protectedRouter } from "../libs/protected-router";
 /**
  * create main router
  */
@@ -26,7 +25,22 @@ export const createRouter = () => {
                 const { LoginRouter } = await import("./routes/app/public/login");
                 return { Component: LoginRouter };
             },
-        }
+        },
+        {
+          path: "signup",
+          lazy: async () => {
+            const { SignUpRouter } = await import("./routes/app/public/signup");
+            return { Component: SignUpRouter };
+          }
+        },
+        {
+          path: "profile",
+          loader: protectedRouter,
+          lazy: async () => { 
+            const { ProfileRouter } = await import("./routes/app/private/profile");
+            return { Component: ProfileRouter };
+          }
+        },
       ],
     },
     {
