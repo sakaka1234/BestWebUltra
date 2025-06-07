@@ -1,8 +1,8 @@
 import axios, { AxiosError } from "axios";
 
 export const apiClient = axios.create({
-    baseURL: "",
-    // withCredentials: true,
+    baseURL: "http://localhost:5001/api",
+    withCredentials: true,
 });
 
 apiClient.interceptors.response.use(
