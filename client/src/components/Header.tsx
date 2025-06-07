@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { FiGithub, FiFacebook, FiTwitter, FiMenu, FiX } from "react-icons/fi";
-const Header = () => {
+export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
   const [contactFormOpen, setContactFormOpen] = useState(false);
@@ -244,4 +244,3 @@ const Header = () => {
   );
 };
 
-export default Header;
