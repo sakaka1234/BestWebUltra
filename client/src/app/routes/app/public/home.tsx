@@ -1,5 +1,5 @@
-import { Header } from "../../../../components/Header";
-import { HeroSection } from "../../../../components/HeroSection";
+import { Header } from "../../../../components/layouts/home/header";
+import { HeroSection } from "../../../../components/layouts/home/hero-section";
 export const HomeRouter = () => {
     return (
         <>
