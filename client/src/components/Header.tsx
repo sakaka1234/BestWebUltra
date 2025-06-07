@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { FiGithub, FiFacebook, FiTwitter, FiMenu, FiX } from "react-icons/fi";
+import { Link } from "react-router-dom";
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -33,24 +34,43 @@ export const Header = () => {
         </motion.div>
         <nav className="lg:flex hidden space-x-8">
           {["Home", "About", "Networking", "Chat Forum", "Contact"].map(
-            (item, index) => (
-              <motion.a
-                key={item}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  delay: 0.7 + index * 0.2,
-                }}
-                className="relative text-gray-800 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 font-medium transition-colors duration-300 group"
-                href="#"
-              >
-                {item}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-sky-500 group-hover:w-full transition-all duration-300"></span>
-              </motion.a>
-            )
+            (item, index) =>
+              item === "Networking" ? (
+                <motion.div
+                  key={item}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.7 + index * 0.2,
+                  }}
+                  className="relative text-gray-800 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 font-medium transition-colors duration-300 group"
+                >
+                  <Link to="/networking">
+                    {item}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-sky-500 group-hover:w-full transition-all duration-300"></span>
+                  </Link>
+                </motion.div>
+              ) : (
+                <motion.a
+                  key={item}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.7 + index * 0.2,
+                  }}
+                  className="relative text-gray-800 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 font-medium transition-colors duration-300 group"
+                  href="#"
+                >
+                  {item}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-sky-500 group-hover:w-full transition-all duration-300"></span>
+                </motion.a>
+              )
           )}
         </nav>
         <div className="md:flex hidden items-center space-x-4">
@@ -243,4 +263,3 @@ export const Header = () => {
     </header>
   );
 };
-

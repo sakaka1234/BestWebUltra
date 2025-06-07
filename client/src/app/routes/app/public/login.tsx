@@ -1,7 +1,5 @@
-import { Login } from "../../../../components/Login"
+import { Login } from "../../../../components/Networking";
 
 export const LoginRouter = () => {
-    return (
-        <Login />
-    )
-}
+  return <Login />;
+};
