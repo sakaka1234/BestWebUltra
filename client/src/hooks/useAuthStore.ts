@@ -1,17 +1,29 @@
 import { create } from "zustand";
-import { apiClient } from "../libs/api-client";
+import { apiClient } from "../libs";
 
-interface AuthState {
-  authUser: any;
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  profilePic?: string;
+}
+
+interface AuthStore {
+  authUser: User | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
-  checkAuth: () => Promise<any>;
-  signup: (data: unknown) => Promise<void>;
+  checkAuth: () => Promise<void>;
+  signup: (data: {
+    username: string;
+    email: string;
+    password: string;
+  }) => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
@@ -24,20 +36,23 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({
         authUser: res.data,
       });
-      return res.data;
     } catch (error) {
       console.error("Error checking authentication:", error);
       set({
         authUser: null,
       });
-      return null;
     } finally {
       set({
         isCheckingAuth: false,
       });
     }
   },
-  signup: async (_data) => {
 
+  signup: async (data) => {
+    // Implementation will go here
+  },
+
+  updateProfile: async (data) => {
+    // Implementation will go here
   },
 }));
