@@ -41,6 +41,13 @@ export const createRouter = () => {
             return { Component: ProfileRouter };
           }
         },
+        {
+          path:"homechat",
+          lazy: async () => {
+            const { HomeChat } = await import("./routes/app/private/homechat");
+            return { Component: HomeChat };
+          }
+        }
       ],
     },
     {

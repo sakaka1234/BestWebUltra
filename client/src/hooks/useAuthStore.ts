@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { apiClient } from "../libs";
-
+import toast from "react-hot-toast";
 interface User {
   id: string;
   username: string;
@@ -49,7 +49,21 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   signup: async (data) => {
-    // Implementation will go here
+    set({isSigningUp: true});
+    try {
+      const res = await apiClient.post("/auth/signup", data);
+      set({authUser: res.data});
+      toast.success("Account created successfully");
+      
+    } catch (error) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        toast.error((error.response as any).data.message);
+      } else {
+        toast.error('An error occurred');
+      }
+    }finally{
+      set({isSigningUp: false});
+    }
   },
 
   updateProfile: async (data) => {

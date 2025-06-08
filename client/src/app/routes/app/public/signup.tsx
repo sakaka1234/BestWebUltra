@@ -2,24 +2,56 @@ import { useState } from "react";
 import { useAuthStore } from "../../../../hooks";
 import { Eye, EyeOff, Loader2, MessageSquare } from "lucide-react";
 import { User, Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../../../../components/layouts/auth/auth-layout";
+import toast from "react-hot-toast";
 
 export const SignUpRouter = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
     password: "",
   });
   const { signup, isSigningUp } = useAuthStore();
-  const validateForm = () => {};
 
-  
-
-  const hadleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const validateForm = () => {
+    if(!formData.username.trim()) {
+      toast.error("Username is required");
+      return false;
+    }
+    if(!formData.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if(!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      toast.error("Invalid email format");
+      return false;
+    }
+    if(!formData.password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if(formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return false;
+    }
+    return true;
   };
+
+  const hadleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    
+    try {
+      await signup(formData);
+      navigate("app/private/homechat");
+    } catch (error) {
+      // Error is already handled in useAuthStore
+    }
+  };
+
   return (
     <AuthLayout>
       <div className="flex flex-col items-center justify-center p-6 sm:p-12">
@@ -51,9 +83,9 @@ export const SignUpRouter = () => {
                   type="text"
                   className="input input-bordered w-full pl-10 bg-transparent "
                   placeholder="John Doe"
-                  value={formData.fullName}
+                  value={formData.username}
                   onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
+                    setFormData({ ...formData, username: e.target.value })
                   }
                 />
               </div>
