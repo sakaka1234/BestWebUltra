@@ -1,7 +1,11 @@
+import { NavChatLayOut } from "../../../../components/layouts/auth/navchat-layout";
+
 export const HomeChat = () => {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <>
+      <NavChatLayOut>
+        <div></div>
+      </NavChatLayOut>
+    </>
   );
 };

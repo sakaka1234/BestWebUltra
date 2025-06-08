@@ -20,34 +20,43 @@ export const createRouter = () => {
           },
         },
         {
-            path: "login",
-            lazy: async () => {
-                const { LoginRouter } = await import("./routes/app/public/login");
-                return { Component: LoginRouter };
-            },
+          path: "login",
+          lazy: async () => {
+            const { LoginRouter } = await import("./routes/app/public/login");
+            return { Component: LoginRouter };
+          },
         },
         {
           path: "signup",
           lazy: async () => {
             const { SignUpRouter } = await import("./routes/app/public/signup");
             return { Component: SignUpRouter };
-          }
+          },
         },
         {
           path: "profile",
           loader: protectedRouter,
-          lazy: async () => { 
-            const { ProfileRouter } = await import("./routes/app/private/profile");
+          lazy: async () => {
+            const { ProfileRouter } = await import(
+              "./routes/app/private/profile"
+            );
             return { Component: ProfileRouter };
-          }
+          },
         },
         {
-          path:"homechat",
+          path: "homechat",
           lazy: async () => {
             const { HomeChat } = await import("./routes/app/private/homechat");
             return { Component: HomeChat };
-          }
-        }
+          },
+        },
+        {
+          path: "navchat",
+          lazy: async () => {
+            const { NavChat } = await import("./routes/app/private/navchat");
+            return { Component: NavChat };
+          },
+        },
       ],
     },
     {

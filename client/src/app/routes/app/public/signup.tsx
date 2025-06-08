@@ -10,30 +10,30 @@ export const SignUpRouter = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
+    fullName: "",
     email: "",
     password: "",
   });
   const { signup, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if(!formData.username.trim()) {
+    if (!formData.fullName.trim()) {
       toast.error("Username is required");
       return false;
     }
-    if(!formData.email.trim()) {
+    if (!formData.email.trim()) {
       toast.error("Email is required");
       return false;
     }
-    if(!/^\S+@\S+\.\S+$/.test(formData.email)) {
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
       toast.error("Invalid email format");
       return false;
     }
-    if(!formData.password.trim()) {
+    if (!formData.password.trim()) {
       toast.error("Password is required");
       return false;
     }
-    if(formData.password.length < 6) {
+    if (formData.password.length < 6) {
       toast.error("Password must be at least 6 characters long");
       return false;
     }
@@ -43,10 +43,10 @@ export const SignUpRouter = () => {
   const hadleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
-    
+
     try {
       await signup(formData);
-      navigate("app/private/homechat");
+      navigate("../homechat");
     } catch (error) {
       // Error is already handled in useAuthStore
     }
@@ -83,9 +83,9 @@ export const SignUpRouter = () => {
                   type="text"
                   className="input input-bordered w-full pl-10 bg-transparent "
                   placeholder="John Doe"
-                  value={formData.username}
+                  value={formData.fullName}
                   onChange={(e) =>
-                    setFormData({ ...formData, username: e.target.value })
+                    setFormData({ ...formData, fullName: e.target.value })
                   }
                 />
               </div>
@@ -162,7 +162,7 @@ export const SignUpRouter = () => {
             <p className="text-base-content/60">
               Already have an account?{" "}
               <Link to="../login" className="link link-primary">
-                Sign in
+                Login
               </Link>
             </p>
           </div>

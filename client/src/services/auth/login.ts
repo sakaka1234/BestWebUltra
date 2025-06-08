@@ -20,7 +20,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: postLoginData,
     onSuccess: () => {
-      navigate("/profile");
+      navigate("/homechat");
     },
     onError: (error: AxiosError) => {
       const data = error.response?.data as ResponseMessage;
