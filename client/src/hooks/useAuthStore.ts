@@ -15,6 +15,7 @@ interface AuthStore {
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
+  onlineUsers: [];
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
   signup: (data: {
@@ -31,7 +32,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
-
+  onlineUsers: [],
   checkAuth: async () => {
     try {
       const res = await apiClient.get("/auth/check");

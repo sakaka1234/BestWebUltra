@@ -12,7 +12,7 @@ interface ChatStore {
   getMessages: (userId: string) => Promise<void>;
 }
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -21,7 +21,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await apiClient.get("/messages/users");
+      const res = await apiClient.get("/messages/user");
       set({ users: res.data });
     } catch (error) {
       toast.error("Failed to fetch users");
@@ -40,4 +40,18 @@ export const useChatStore = create<ChatStore>((set) => ({
       set({ isMessagesLoading: false });
     }
   },
+  sendMessage: async (messageData: any) => {
+    const { selectedUser, messages } = get();
+    try {
+      const res = await apiClient.post(
+        `messages/send/${selectedUser._id}`,
+        messageData
+      );
+      set({ messages: [...messages, res.data] });
+    } catch (error) {
+      toast.error("Some thing went wrong when send message");
+    }
+  },
+  // optimize this one later
+  setSelectedUser: (selectedUser: any) => set({ selectedUser }),
 }));
