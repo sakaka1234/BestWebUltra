@@ -13,7 +13,7 @@ export const ChatHeader = () => {
           <div className="avatar">
             <div className="size-10 rounded-full relative">
               <img
-                src={selectedUser.profilePic || "./public/images/user.png"}
+                src={selectedUser.profilePic || "./images/user.png"}
                 alt={selectedUser.fullName}
                 className="bg-slate-100"
               />

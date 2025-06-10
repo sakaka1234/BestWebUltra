@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../../hooks";
 import { LogOut, MessageSquare, Settings, User, Sun, Moon } from "lucide-react";
 interface NavChatProps {
@@ -7,6 +7,12 @@ interface NavChatProps {
 }
 export const NavChat = ({ isDark, toggleTheme }: NavChatProps) => {
   const { logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
   return (
     <header className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
       <div className="container mx-auto px-4 h-16 ">
@@ -40,7 +46,7 @@ export const NavChat = ({ isDark, toggleTheme }: NavChatProps) => {
               <span className="hidden sm:inline">Profile</span>
             </Link>
             {/* Log out */}
-            <button className="flex gap-2 items-center" onClick={logout}>
+            <button className="flex gap-2 items-center" onClick={handleLogout}>
               <LogOut className="size-5" />
               <span className="hidden sm:inline">Logout</span>
             </button>

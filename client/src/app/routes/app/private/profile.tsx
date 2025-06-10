@@ -31,9 +31,7 @@ export const ProfileRouter = () => {
               <div className="relative">
                 <img
                   src={
-                    selectedImg ||
-                    authUser?.profilePic ||
-                    "./public/images/user.png"
+                    selectedImg || authUser?.profilePic || "./images/user.png"
                   }
                   alt="Profile"
                   className="size-32 rounded-full object-cover border-4 bg-white"
