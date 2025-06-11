@@ -1,10 +1,12 @@
-import { Header } from "../../../../components/layouts/home/header";
-import { HeroSection } from "../../../../components/layouts/home/hero-section";
+import { HomeFooter } from "../../../../components/layouts/home/footer";
+import { HeaderHome } from "../../../../components/layouts/home/header";
+import { MainHome } from "../../../../components/layouts/home/main";
 export const HomeRouter = () => {
     return (
         <>
-            <Header />
-            <HeroSection />
+            <HeaderHome />
+            <MainHome />
+            <HomeFooter />
         </>
     )
 }

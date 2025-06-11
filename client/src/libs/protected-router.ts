@@ -6,10 +6,11 @@ export const protectedRouter = async () => {
   const store = useAuthStore.getState();
   let user = store.authUser;
   if (user == null) {
-    user = await store.checkAuth();
+    await store.checkAuth(); 
+    user = store.authUser; 
   }
   if (!user) {
     throw redirect("/login");
   }
   return null;
-}
+};
