@@ -2,12 +2,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { FiGithub, FiFacebook, FiTwitter, FiMenu, FiX } from "react-icons/fi";
 import { Link } from "react-router-dom";
-export const Header = () => {
+export const HeaderHome = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
   const [contactFormOpen, setContactFormOpen] = useState(false);
 
-  const openContactForm = () => setContactFormOpen(true);
+  // const openContactForm = () => setContactFormOpen(true);
   const closeContactForm = () => setContactFormOpen(false);
   return (
     <header className="absolute w-full z-50 transition-all duration-300 dark ">
@@ -114,22 +114,13 @@ export const Header = () => {
             <FiFacebook className="w-5 h-5" />
           </motion.a>
           {/* Register button */}
-          <motion.button
-            onClick={openContactForm}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              delay: 1.6,
-              duration: 0.8,
-              type: "spring",
-              stiffness: 100,
-              damping: 15,
-            }}
+          <Link
+            to={"/login"}
             className="ml-4 px-4 py-2 rounded-xl bg-gradient-to-r from-gray-600 to-cyan-500 text-cyan-50 font-bold hover:from-cyan-700 hover:to-gray-800 hover:text-white
         transition-all duration-400"
           >
-            Register
-          </motion.button>
+            Login
+          </Link>
           {/* Mobile new button */}
         </div>
         <div className="md:hidden flex items-center">
@@ -183,12 +174,9 @@ export const Header = () => {
               <FiTwitter className="h-5 w-5 text-gray-300" />
             </a>
           </div>
-          <button
-            onClick={openContactForm}
-            className="mt-4 block w-full px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-violet-400 font-bold "
-          >
-            Register
-          </button>
+          <Link to={"/login"} className="mt-4 block w-full px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-violet-400 font-bold ">
+          Login
+          </Link>
         </div>
       </motion.div>
       {/* Register form */}
