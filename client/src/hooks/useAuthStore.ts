@@ -29,7 +29,7 @@ interface AuthStore {
   }) => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
 }
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://localhost:5001";
 export const useAuthStore = create<AuthStore>((set, get) => ({
   authUser: null,
   isSigningUp: false,
