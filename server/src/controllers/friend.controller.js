@@ -1,4 +1,4 @@
-import ListFriend from "../models/listfriend.model";
+import ListFriend from "../models/listfriend.model.js";
 import { getReceiverSocketId, io } from "../lib/socket";
 
 // gửi lời mời kết bạn
