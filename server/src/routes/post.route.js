@@ -2,20 +2,20 @@ import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import {
   createPost,
-  getAllPosts,
-  getPostById,
-  addComment,
-  getCommentsByPostId,
+  getFriendPosts,
+  getPostsByTopic,
+  searchPosts,
   deletePost,
+  addComment,
 } from "../controllers/post.controller.js";
 
 const router = express.Router();
 
 router.post("/create", protectRoute, createPost);
-router.get("/all", getAllPosts);
-router.get("/:id", getPostById);
-router.post("/:postId/comment", protectRoute, addComment);
-router.get("/:postId/comments", getCommentsByPostId);
+router.get("/friends", protectRoute, getFriendPosts);
+router.get("/topic/:topicId", protectRoute, getPostsByTopic);
+router.get("/search", protectRoute, searchPosts);
 router.delete("/:id", protectRoute, deletePost);
+router.post("/:postId/comment", protectRoute, addComment);
 
 export default router;
