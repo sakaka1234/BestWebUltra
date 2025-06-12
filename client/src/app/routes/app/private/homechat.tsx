@@ -3,8 +3,21 @@ import { NavChatLayOut } from "../../../../components/layouts/auth/navchat-layou
 import { useChatStore } from "../../../../hooks/usechatstore";
 import { NoChatSelected } from "./chat-components/nochatselected";
 import { ChatContainer } from "./chat-components/chatcontainer";
+import { useAuthStore } from "../../../../hooks";
+import { useEffect } from "react";
 export const HomeChat = () => {
   const { selectedUser } = useChatStore();
+  const { onlineUsers, authUser } = useAuthStore();
+
+  useEffect(() => {
+    // Log để debug
+    console.log("Auth User:", authUser?._id);
+    console.log("Online Users:", onlineUsers);
+    console.log(
+      "Is current user online:",
+      onlineUsers.includes(authUser?._id || "")
+    );
+  }, [onlineUsers, authUser]);
   return (
     <NavChatLayOut>
       <div className="h-screen bg-base-200">

@@ -1,12 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
+import "./models/topic.model.js";
+import "./models/post.model.js";
+import "./models/comment.model.js";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { app, server } from "./lib/socket.js";
-
+import postRoutes from "./routes/post.route.js";
+import friendRoutes from "./routes/friend.route.js";
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -18,12 +22,13 @@ app.use(
   cors({
     origin: CLIENT_URL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/friends", friendRoutes);
 
 server.listen(PORT, () => {
   console.log("server is running on port: " + PORT);
