@@ -45,17 +45,59 @@ export const createRouter = () => {
         },
         {
           path: "homechat",
+          loader: protectedRouter,
           lazy: async () => {
             const { HomeChat } = await import("./routes/app/private/homechat");
             return { Component: HomeChat };
           },
         },
         {
-          path: "navchat",
+          path: "forum",
+          // loader: protectedRouter,
           lazy: async () => {
-            const { NavChat } = await import("./routes/app/private/navchat");
-            return { Component: NavChat };
+            const { ChatForumRouter } = await import(
+              "./routes/app/private/chat-forum"
+            );
+            return { Component: ChatForumRouter };
           },
+          children: [
+            {
+              path: "",
+              lazy: async () => {
+                const { HomePage } = await import(
+                  "./routes/app/private/forum-subpage/home-page"
+                );
+                return { Component: HomePage };
+              },
+            },
+            {
+              path: "topic/:topicId",
+              lazy: async () => {
+                const { TopicPage } = await import(
+                  "./routes/app/private/forum-subpage/topic-page"
+                );
+                return { Component: TopicPage };
+              }
+            },
+            {
+              path: "friend",
+              lazy: async () => {
+                const { FriendPage } = await import(
+                  "./routes/app/private/forum-subpage/friend-page"
+                );
+                return { Component: FriendPage };
+              }
+            },
+            {
+              path: "discussion/:threadId",
+              lazy: async () => {
+                const { DiscussionPage } = await import(
+                  "./routes/app/private/forum-subpage/discussion-page"
+                );
+                return { Component: DiscussionPage };
+              }
+            }
+          ],
         },
       ],
     },
