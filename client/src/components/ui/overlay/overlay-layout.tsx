@@ -19,7 +19,7 @@ export const OverlayLayout = ({
             onClick={onDismiss}
         >
             <div
-                className="w-full px-2"
+                className="px-2"
                 onClick={(e) => {
                     e.stopPropagation();
                 }}

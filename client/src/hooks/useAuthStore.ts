@@ -128,7 +128,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         set({ socket });
       });
 
-      socket.on("connect_error", (error) => {
+      socket.on("connect_error", (error: any) => {
         console.error("Socket connection error details:", error);
         toast.error("Socket connection failed");
       });

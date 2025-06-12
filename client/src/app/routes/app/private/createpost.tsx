@@ -35,8 +35,8 @@ export const CreatePost = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-700 rounded-lg shadow-lg w-full max-w-md">
+    <div className="w-[450px] ">
+      <div className="bg-gray-700 rounded-lg shadow-lg">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold text-gray-100">
