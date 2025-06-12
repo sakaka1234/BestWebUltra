@@ -4,13 +4,13 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 // gửi lời mời kết bạn
 export const sendFriendRequest = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const user = req.user; // Thay vì const userId = req.user._id
     const { friendId } = req.params;
 
     const existingRequest = await ListFriend.findOne({
       $or: [
-        { userId, friendId },
-        { userId: friendId, friendId: userId },
+        { userId: user._id, friendId },
+        { userId: friendId, friendId: user._id },
       ],
     });
 
@@ -19,16 +19,17 @@ export const sendFriendRequest = async (req, res) => {
     }
 
     const newFriendRequest = new ListFriend({
-      userId,
+      userId: user._id,
       friendId,
       status: false,
+      user: user, // Thêm thông tin người gửi
     });
     await newFriendRequest.save();
 
     const reiceiverSocketId = getReceiverSocketId(friendId);
     if (reiceiverSocketId) {
       io.to(reiceiverSocketId).emit("newFriendRequest", {
-        userId,
+        userId: user._id,
         friendId,
       });
     }
@@ -77,12 +78,12 @@ export const rejectRequest = async (req, res) => {
 // Lấy danh sách bạn bè
 export const getFriendList = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const user = req.user; // Thay vì const userId = req.user._id
 
     const friends = await ListFriend.find({
       $or: [
-        { userId, status: true },
-        { friendId: userId, status: true },
+        { userId: user._id, status: true },
+        { friendId: user._id, status: true },
       ],
     }).populate("userId friendId", "-password");
     res.status(200).json(friends);

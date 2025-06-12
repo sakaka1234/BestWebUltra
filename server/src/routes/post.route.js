@@ -7,6 +7,7 @@ import {
   searchPosts,
   deletePost,
   addComment,
+  getAllPosts,
 } from "../controllers/post.controller.js";
 
 const router = express.Router();
@@ -17,5 +18,5 @@ router.get("/topic/:topicId", protectRoute, getPostsByTopic);
 router.get("/search", protectRoute, searchPosts);
 router.delete("/:id", protectRoute, deletePost);
 router.post("/:postId/comment", protectRoute, addComment);
-
+router.get("/all", protectRoute, getAllPosts);
 export default router;

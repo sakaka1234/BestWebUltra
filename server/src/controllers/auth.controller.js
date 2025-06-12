@@ -54,12 +54,13 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    generateToken(user._id, res);
+    const token = generateToken(user._id, res);
     res.status(200).json({
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
       profilePic: user.profilePic,
+      token: token,
     });
   } catch (error) {
     console.log("Error in login controller", error.message);
@@ -79,7 +80,7 @@ export const logout = (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
-    const userId = req.user._id;
+    const user = req.user; // Thay vì const userId = req.user._id
 
     if (!profilePic) {
       return res
@@ -89,8 +90,11 @@ export const updateProfile = async (req, res) => {
 
     const uploadResponse = await cloudinary.uploader.upload(profilePic);
     const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: uploadResponse.secure_url },
+      user._id,
+      {
+        profilePic: uploadResponse.secure_url,
+        user: user, // Thêm thông tin user
+      },
       { new: true }
     );
     res.status(200).json(updatedUser);

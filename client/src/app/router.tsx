@@ -50,13 +50,6 @@ export const createRouter = () => {
             return { Component: HomeChat };
           },
         },
-        {
-          path: "navchat",
-          lazy: async () => {
-            const { NavChat } = await import("./routes/app/private/navchat");
-            return { Component: NavChat };
-          },
-        },
       ],
     },
     {
