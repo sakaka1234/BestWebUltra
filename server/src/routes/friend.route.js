@@ -7,7 +7,7 @@ import {
   getFriendList,
   getReceivedRequests,
   getSentRequests,
-} from "../controllers/friend.controller";
+} from "../controllers/friend.controller.js";
 const router = express.Router();
 
 router.post("/send/:friendId", protectRoute, sendFriendRequest);
