@@ -15,6 +15,6 @@ router.post("/accept/:requestId", protectRoute, acceptFriendRequest);
 router.delete("/reject/:requestId", protectRoute, rejectRequest);
 router.get("/list", protectRoute, getFriendList);
 router.get("/requests/reiceived", protectRoute, getReceivedRequests);
-router, get("requests/sent", protectRoute, getSentRequests);
+router.get("/requests/sent", protectRoute, getSentRequests);
 
 export default router;
