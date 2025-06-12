@@ -6,7 +6,8 @@ import { connectDB } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { app, server } from "./lib/socket.js";
-
+import postRoutes from "./routes/post.route.js";
+import friendRoutes from "./routes/friend.route.js";
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -20,8 +21,11 @@ app.use(
     credentials: true,
   })
 );
+
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/friends", friendRoutes);
 
 server.listen(PORT, () => {
   console.log("server is running on port: " + PORT);

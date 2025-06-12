@@ -2,14 +2,26 @@ import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
+import ListFriend from "../models/listfriend.model.js";
 export const getUserForSidebar = async (req, res) => {
   try {
-    const loggedInUser = req.user._id;
-    const filteredUser = await User.find({ _id: { $ne: loggedInUser } }).select(
-      "-password"
+    const myId = req.user._id;
+    // Lấy danh sách bạn bè đã acp
+    const friends = await ListFriend.find({
+      $or: [
+        { userId: myId, status: true },
+        { friendId: myId, status: true },
+      ],
+    });
+    //Lấy danh sách ID bạn bè
+    const friendIds = friends.map((friend) =>
+      friend.userId.equals(myId) ? friend.friendId : friend.userId
     );
 
-    res.status(200).json(filteredUser);
+    const friendList = await User.find({
+      _id: { $in: friendIds },
+    }).select("-password");
+    res.status(200).json(friendList);
   } catch (error) {
     console.error("Error in getUserForSidebar :", error);
     res.status(500).json({ message: "Internal Server Error" });
