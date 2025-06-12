@@ -1,5 +1,5 @@
 import ListFriend from "../models/listfriend.model.js";
-import { getReceiverSocketId, io } from "../lib/socket";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 // gửi lời mời kết bạn
 export const sendFriendRequest = async (req, res) => {
