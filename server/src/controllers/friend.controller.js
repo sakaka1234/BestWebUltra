@@ -78,20 +78,40 @@ export const rejectRequest = async (req, res) => {
 // Lấy danh sách bạn bè
 export const getFriendList = async (req, res) => {
   try {
-    const user = req.user; // Thay vì const userId = req.user._id
+    const user = req.user;
 
     const friends = await ListFriend.find({
       $or: [
         { userId: user._id, status: true },
         { friendId: user._id, status: true },
       ],
-    }).populate("userId friendId", "-password");
-    res.status(200).json(friends);
+    }).populate("userId friendId", "fullName email profilePic");
+
+    // Format lại response để chỉ lấy thông tin của bạn bè
+    const formattedFriends = friends.map((friend) => {
+      // Nếu userId là của mình thì lấy thông tin của friendId và ngược lại
+      const friendInfo = friend.userId._id.equals(user._id)
+        ? friend.friendId
+        : friend.userId;
+
+      return {
+        _id: friend._id,
+        friend: {
+          _id: friendInfo._id,
+          fullName: friendInfo.fullName,
+          email: friendInfo.email,
+          profilePic: friendInfo.profilePic,
+        },
+      };
+    });
+
+    res.status(200).json(formattedFriends);
   } catch (error) {
     console.error("Error in get friend list", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 //Lấy danh sách lời mời kết bạn đã nhận
 export const getReceivedRequests = async (req, res) => {
   try {
@@ -100,9 +120,20 @@ export const getReceivedRequests = async (req, res) => {
     const requests = await ListFriend.find({
       friendId: myId,
       status: false,
-    }).populate("userId", "-password");
+    }).populate("userId", "fullName email profilePic");
 
-    res.status(200).json(requests);
+    // Format response to match getSentRequests structure
+    const formattedRequests = requests.map((request) => ({
+      _id: request._id,
+      sender: {
+        _id: request.userId._id,
+        fullName: request.userId.fullName,
+        email: request.userId.email,
+        profilePic: request.userId.profilePic,
+      },
+    }));
+
+    res.status(200).json(formattedRequests);
   } catch (error) {
     console.error("Error in get received requests", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -113,11 +144,21 @@ export const getSentRequests = async (req, res) => {
   try {
     const myId = req.user._id;
 
-    const requests = await ListFriend.find({
+    const sentRequests = await ListFriend.find({
       userId: myId,
       status: false,
-    }).populate("friendId", "-password");
-    res.status(200).json(requests);
+    }).populate("friendId", "fullName email profilePic");
+    const formattedRequests = sentRequests.map((request) => ({
+      _id: request._id,
+      recipient: {
+        _id: request.friendId._id,
+        fullName: request.friendId.fullName,
+        email: request.friendId.email,
+        profilePic: request.friendId.profilePic,
+      },
+      createdAt: request.createdAt,
+    }));
+    res.status(200).json(formattedRequests);
   } catch (error) {
     console.error("Error in get sent requests", error);
     res.status(500).json({ message: "Internal Server Error" });
