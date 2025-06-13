@@ -77,14 +77,14 @@ export const HeroSection = () => {
       </div>
 
       {/* Right section - 3D Globe */}
-      {/* <Spline
+      <Spline
         className="z-30 absolute 
     xl:left-[27%] xl:top-[7%] 
     max-sm:flex max-sm:-translate-y-24 max-[486px]:-translate-y-40 
     max-sm:opacity-0 max-sm:invisible max-sm:pointer-events-none
         "
         scene="https://prod.spline.design/IfdOCJaJaqGNgK3X/scene.splinecode"
-      /> */}
+      />
 
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

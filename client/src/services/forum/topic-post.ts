@@ -33,7 +33,7 @@ export const useCreatePost = () => {
     }) => {
       return apiClient.post<Post>("posts/create", postData);
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["topic-posts"] });

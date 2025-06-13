@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSendFriendRequest } from "../../../services";
 import { toast } from "react-hot-toast";
+
 interface DiscussionCardProps {
   id: string;
   userImage: string;
@@ -43,9 +44,15 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
           <span className="text-sm font-semibold text-white">{userName}</span>
           <button
             onClick={handleAddFriendClick}
-            className="text-xs bg-[#3b82f6] hover:bg-[#2563eb] text-white px-3 py-1 rounded-lg transition-colors"
+            disabled={isSending}
+            className={`text-xs px-3 py-1 rounded-lg transition-colors
+              ${
+                isSending
+                  ? "bg-gray-500 text-white cursor-not-allowed"
+                  : "bg-[#3b82f6] hover:bg-[#2563eb] text-white"
+              }`}
           >
-            Add Friend
+            {isSending ? "Sending..." : "Add Friend"}
           </button>
         </div>
         <div className="text-gray-200 text-[15px]">{comment}</div>

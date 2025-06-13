@@ -1,6 +1,6 @@
 import { apiClient } from "../../libs";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Comment, Post } from "../../types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Comment } from "../../types";
 
 // Get comments
 export const getDiscussionComments = (postId: string) => {

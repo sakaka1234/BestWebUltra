@@ -51,7 +51,7 @@ interface PostStore {
   clearError: () => void;
 }
 
-export const usePostStore = create<PostStore>((set, get) => ({
+export const usePostStore = create<PostStore>((set) => ({
   posts: [],
   selectedPost: null,
   isLoading: false,

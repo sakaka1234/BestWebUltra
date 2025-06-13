@@ -1,4 +1,4 @@
-import { apiClient, queryClient } from "../../libs";
+import { apiClient } from "../../libs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FriendRequest } from "../../types";
 import toast from "react-hot-toast";
