@@ -8,6 +8,7 @@ import {
   deletePost,
   addComment,
   getAllPosts,
+  getPostById,
 } from "../controllers/post.controller.js";
 
 const router = express.Router();
@@ -19,4 +20,5 @@ router.get("/search", protectRoute, searchPosts);
 router.delete("/:id", protectRoute, deletePost);
 router.post("/:postId/comment", protectRoute, addComment);
 router.get("/all", protectRoute, getAllPosts);
+router.get("/:id", protectRoute, getPostById);
 export default router;

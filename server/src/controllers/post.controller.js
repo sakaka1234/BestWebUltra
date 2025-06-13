@@ -159,19 +159,21 @@ export const addComment = async (req, res) => {
 
     await newComment.save();
 
+    // Populate thông tin người comment từ database
+    await newComment.populate("userId", "fullName profilePic");
+
     // Add comment to post
     post.comments.push(newComment._id);
     await post.save();
 
-    // Populate user info
-    await newComment.populate("userId", "fullName email profilePic");
-
+    // Trả về thông tin của người comment từ database
     res.status(201).json({
-      ...newComment.toJSON(),
-      user: {
-        fullName: user.fullName,
-        email: user.email,
-        profilePic: user.profilePic,
+      _id: newComment._id,
+      content: newComment.content,
+      commenter: {
+        _id: newComment.userId._id,
+        name: newComment.userId.fullName,
+        profilePic: newComment.userId.profilePic,
       },
     });
   } catch (error) {
@@ -207,6 +209,55 @@ export const getAllPosts = async (req, res) => {
     res.status(200).json(formattedPosts);
   } catch (error) {
     console.error("Error in getAllPosts:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+// Get post by id
+export const getPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id)
+      .populate("userId", "fullName profilePic")
+      .populate("topicId", "name")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "userId",
+          select: "fullName profilePic",
+        },
+      });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Format response
+    const formattedPost = {
+      _id: post._id,
+      title: post.title,
+      content: post.content,
+      postImage: post.imageURL,
+      author: {
+        _id: post.userId._id,
+        name: post.userId.fullName,
+        profilePic: post.userId.profilePic,
+      },
+      topic: post.topicId.name,
+      comments: post.comments.map((comment) => ({
+        _id: comment._id,
+        content: comment.content,
+        commenter: {
+          _id: comment.userId._id,
+          name: comment.userId.fullName,
+          profilePic: comment.userId.profilePic,
+        },
+      })),
+    };
+
+    res.status(200).json(formattedPost);
+  } catch (error) {
+    console.error("Error in getPostById:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
