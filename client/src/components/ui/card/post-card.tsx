@@ -2,16 +2,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface PostCardProps {
+  id: string;
   postImage: string;
   userImage: string;
   userName: string;
   title: string;
   content: string;
   date: string;
-  onClick?: () => void;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
+  id,
   postImage,
   userImage,
   userName,
@@ -28,7 +29,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   return (
     <div
       className="bg-[#232931] rounded-2xl p-6 flex gap-6 items-center cursor-pointer hover:shadow-lg transition-shadow duration-200"
-      onClick={(e) => onClick("id test", e)}
+      onClick={(e) => onClick(id, e)}
     >
       <div className="flex-shrink-0">
         <img

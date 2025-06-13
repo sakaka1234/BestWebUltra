@@ -1,18 +1,24 @@
 import React from "react";
+import { useAcceptFriendInvitation, useRejectFriendInvitation } from "../../../services";
 
 interface FriendCardProps {
   userImage: string;
   userName: string;
-  onAccept: () => void;
-  onReject: () => void;
+  id: string;
 }
 
 export const FriendCardInvite: React.FC<FriendCardProps> = ({
   userImage,
   userName,
-  onAccept,
-  onReject,
+  id
 }) => {
+  const onAccept = () => {
+    useAcceptFriendInvitation().mutate(id);
+  };
+  const onReject = () => {
+    useRejectFriendInvitation().mutate(id);
+  };
+
   return (
     <div className="bg-[#232931] rounded-xl p-5 flex items-center gap-4 shadow-md w-[300px]">
       <img
