@@ -11,9 +11,11 @@ import cors from "cors";
 import { app, server } from "./lib/socket.js";
 import postRoutes from "./routes/post.route.js";
 import friendRoutes from "./routes/friend.route.js";
+import path from "path";
 dotenv.config();
 
 const PORT = process.env.PORT;
+const __dirname = path.resolve();
 const CLIENT_URL = "http://localhost:3000";
 
 app.use(express.json());
@@ -30,6 +32,12 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/friends", friendRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client", "dist", "index.html"));
+  });
+}
 server.listen(PORT, () => {
   console.log("server is running on port: " + PORT);
   connectDB();
