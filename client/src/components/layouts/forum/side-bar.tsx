@@ -12,18 +12,18 @@ const sideBarItems: SideBarItem[] = [
         icon: <Connect />, // Replace with actual icon component
         label: "Friends Seeking",  
         des: "Find friends to connect with",
-        path: "/forum/topic/friends",
+        path: "/forum/topic/684ad8af513c816bccc7b56f",
     },
     {
         icon: <Career />, // Replace with actual icon component
         label: "Job Seeking",
-        path: "/forum/topic/job",
+        path: "/forum/topic/684ad8af513c816bccc7b570",
         des: "Explore job opportunities",
     },
     {
         icon: <Tutorial />, // Replace with actual icon component
         label: "Project Collaboration",
-        path: "/forum/topic/project",
+        path: "/forum/topic/684ad8af513c816bccc7b571",
         des: "Collaborate on projects",
     },
 ];

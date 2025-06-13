@@ -17,7 +17,7 @@ const navList: NavItem[] = [
   },
   {
     icon: <Message />,
-    path: "/forum/message",
+    path: "/homechat",
   },
 ];
 
@@ -39,7 +39,7 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
     <header className="flex items-center justify-center bg-[#262D34]">
       <div className="flex w-full items-center justify-between px-[100px] py-[20px] ">
         {/* logo */}
-        <div className="flex items-center justify-center gap-[10px]">
+        <a href="/" className="flex items-center justify-center gap-[10px]">
           <span
             className="flex  items-center justify-center w-[30px] h-[30px] p-[4px] rounded-[6px] bg-[#F7F7F7]
                         text-[26px] text-[#DA6227] font-[700] leading-[38px]"
@@ -49,7 +49,7 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
           <p className="text-[26px] text-[#DA6227] font-[700] leading-[38px]">
             Nexora
           </p>
-        </div>
+        </a>
         <div className="flex items-center justify-between gap-[20px]">
           {/* navigation list */}
           <div>
@@ -81,7 +81,7 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
         </div>
         {/* profile */}
         <a
-          href="/forum/profile"
+          href="/profile"
           className="flex items-center gap-2 px-3 py-1 rounded-[10px] hover:bg-[#31363B] transition-all duration-200"
         >
           {/* Avatar */}
@@ -100,7 +100,7 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
           )}
           {/* Name */}
           <span className="text-[16px] font-bold text-[#F7F7F7]">
-            {userName} Dang Xuan Tien
+            {userName}
           </span>
           {/* Arrow */}
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
