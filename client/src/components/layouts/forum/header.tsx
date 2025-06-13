@@ -1,6 +1,7 @@
 import React from "react";
 import { Message, Friends, Home, Search } from "../../../assets/icons";
-
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 interface NavItem {
   icon: React.ReactNode;
   path: string;
@@ -30,9 +31,11 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
   avatarUrl,
   userName,
 }) => {
+  const location = useLocation();
   const navActive = (path: string) => {
-    const currentPath = window.location.pathname;
-    return currentPath === path ? "bg-[#DA6227] text-white" : "text-[#F7F7F7]";
+    return location.pathname === path
+      ? "bg-[#DA6227] text-white"
+      : "text-[#F7F7F7] hover:bg-[#31363B]";
   };
 
   return (
@@ -59,12 +62,12 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
                   key={index}
                   className={`hover:bg-[#31363B] transition-all duration-200 rounded-[6px] ${navActive(item.path)}`}
                 >
-                  <a
-                    href={item.path}
+                  <Link
+                    to={item.path}
                     className="flex items-center justify-center p-[10px] "
                   >
                     {item.icon}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -80,8 +83,8 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
           </div>
         </div>
         {/* profile */}
-        <a
-          href="/profile"
+        <Link
+          to="/profile"
           className="flex items-center gap-2 px-3 py-1 rounded-[10px] hover:bg-[#31363B] transition-all duration-200"
         >
           {/* Avatar */}
@@ -112,7 +115,7 @@ export const HeaderForum: React.FC<HeaderForumProps> = ({
               strokeLinejoin="round"
             />
           </svg>
-        </a>
+        </Link>
       </div>
     </header>
   );

@@ -45,7 +45,7 @@ export const createRouter = () => {
         },
         {
           path: "homechat",
-          loader: protectedRouter,
+
           lazy: async () => {
             const { HomeChat } = await import("./routes/app/private/homechat");
             return { Component: HomeChat };
@@ -53,7 +53,7 @@ export const createRouter = () => {
         },
         {
           path: "forum",
-          // loader: protectedRouter,
+          loader: protectedRouter,
           lazy: async () => {
             const { ChatForumRouter } = await import(
               "./routes/app/private/chat-forum"
@@ -63,6 +63,7 @@ export const createRouter = () => {
           children: [
             {
               path: "",
+              loader: protectedRouter,
               lazy: async () => {
                 const { HomePage } = await import(
                   "./routes/app/private/forum-subpage/home-page"
@@ -72,31 +73,34 @@ export const createRouter = () => {
             },
             {
               path: "topic/:topicId",
+              loader: protectedRouter,
               lazy: async () => {
                 const { TopicPage } = await import(
                   "./routes/app/private/forum-subpage/topic-page"
                 );
                 return { Component: TopicPage };
-              }
+              },
             },
             {
               path: "friend",
+              loader: protectedRouter,
               lazy: async () => {
                 const { FriendPage } = await import(
                   "./routes/app/private/forum-subpage/friend-page"
                 );
                 return { Component: FriendPage };
-              }
+              },
             },
             {
               path: "discussion/:threadId",
+              loader: protectedRouter,
               lazy: async () => {
                 const { DiscussionPage } = await import(
                   "./routes/app/private/forum-subpage/discussion-page"
                 );
                 return { Component: DiscussionPage };
-              }
-            }
+              },
+            },
           ],
         },
       ],

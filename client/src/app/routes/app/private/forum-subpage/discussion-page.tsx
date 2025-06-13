@@ -2,33 +2,38 @@ import { useState } from "react";
 import { PostCard, DiscussionCard } from "../../../../../components/ui";
 import { useParams } from "react-router-dom";
 import {
-  useAddDiscussionComment,
+  useAddComment,
   useDiscussionComments,
   usePostDetails,
 } from "../../../../../services";
-
+import { useQueryClient } from "@tanstack/react-query";
 export const DiscussionPage = () => {
-  const { discussionId } = useParams();
+  const { threadId } = useParams();
   const { data: comments, isLoading } = useDiscussionComments(
-    discussionId as string
+    threadId as string
   );
-  const { data: postDetails } = usePostDetails(discussionId as string);
+  const { data: postDetails } = usePostDetails(threadId as string);
 
   const [commentInput, setCommentInput] = useState("");
   const authUser = localStorage.getItem("authUser");
   const avatarUrl = authUser
     ? JSON.parse(authUser).profilePic
     : "/images/avatar.png";
-  const userId = authUser ? JSON.parse(authUser)._id : "undefined_user_id";
+
+  const queryClient = useQueryClient();
+
+  const addDiscussionCommentMutation = useAddComment(threadId as string);
 
   const handleCommentSubmit = () => {
-    console.log("Comment data:", commentInput);
-    const data = {
-      content: commentInput,
-      userId: userId,
-    };
-    useAddDiscussionComment(discussionId as string).mutate(data);
-    setCommentInput("");
+    addDiscussionCommentMutation.mutate(commentInput, {
+      onSuccess: () => {
+        // Sau khi submit thành công → refetch comments
+        queryClient.invalidateQueries({
+          queryKey: ["post-comments", threadId as string],
+        });
+        setCommentInput("");
+      },
+    });
   };
 
   return (
@@ -36,7 +41,7 @@ export const DiscussionPage = () => {
       {postDetails ? (
         <PostCard
           id={postDetails.data._id}
-          postImage={postDetails.data.image || "link_ảnh_post"}
+          postImage={postDetails.data.imageURL || "link_ảnh_post"}
           userImage={postDetails.data.author.profilePic || "link_avatar"}
           userName={postDetails.data.author.name || "Unknown User"}
           title={postDetails.data.title}
@@ -76,7 +81,7 @@ export const DiscussionPage = () => {
         {isLoading ? (
           <div className="text-gray-400">Loading comments...</div>
         ) : (
-          comments?.data?.map((comment) => (
+          comments?.map((comment) => (
             <DiscussionCard
               key={comment._id}
               id={comment.commenter._id}

@@ -4,14 +4,17 @@ import { useFriendInvitations, useFriendsList } from "../../../../../services";
 import { Friend, FriendRequest } from "../../../../../types";
 
 export const FriendPage = () => {
-  const { data: invitations, isLoading: isInvitationsLoading } = useFriendInvitations();
+  const { data: invitations, isLoading: isInvitationsLoading } =
+    useFriendInvitations();
   const { data: friends, isLoading: isFriendsLoading } = useFriendsList();
 
   return (
     <div className="flex items-start gap-20">
       {/* Friend Invite */}
       <div className="flex flex-col items-start gap-2">
-        <span className="text-lg font-semibold text-gray-200">Friend Invite</span>
+        <span className="text-lg font-semibold text-gray-200">
+          Friend Invite
+        </span>
         {isInvitationsLoading ? (
           <div className="text-gray-400">Loading...</div>
         ) : (
@@ -21,7 +24,7 @@ export const FriendPage = () => {
                 key={invite._id}
                 id={invite._id}
                 userImage={invite.sender.profilePic || "link_avatar"}
-                userName={invite.sender.fullname}
+                userName={invite.sender.fullName}
               />
             ))}
           </div>
@@ -39,7 +42,7 @@ export const FriendPage = () => {
               <FriendCard
                 key={friend._id}
                 userImage={friend.friend.profilePic || "link_avatar"}
-                userName={friend.friend.fullname}
+                userName={friend.friend.fullName}
               />
             ))}
           </div>

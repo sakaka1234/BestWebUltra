@@ -22,9 +22,10 @@ export const useLogin = () => {
     mutationFn: postLoginData,
     onSuccess: async (response) => {
       useAuthStore.setState({ authUser: response.data });
+      localStorage.setItem("authUser", JSON.stringify(response.data));
       // Connect socket
       await connectSocket();
-      navigate("/homechat");
+      navigate("/forum");
       toast.success("Login successfully");
     },
     onError: (error: AxiosError) => {

@@ -7,32 +7,62 @@ import Topic from "../models/topic.model.js";
 export const createPost = async (req, res) => {
   try {
     const { title, content, topicId, image } = req.body;
-    const user = req.user; // Lấy toàn bộ user object thay vì chỉ _id
+    const user = req.user;
 
-    let imageURL;
-    if (image) {
-      const uploadResponse = await cloudinary.uploader.upload(image);
-      imageURL = uploadResponse.secure_url;
+    // Validate required fields
+    if (!content || !topicId) {
+      return res
+        .status(400)
+        .json({ message: "Content and topic are required" });
     }
 
+    // Upload image if provided
+    let imageURL;
+    if (image) {
+      try {
+        const uploadResponse = await cloudinary.uploader.upload(image, {
+          folder: "posts",
+        });
+        imageURL = uploadResponse.secure_url;
+      } catch (error) {
+        console.error("Image upload error:", error);
+        return res.status(400).json({ message: "Image upload failed" });
+      }
+    }
+
+    // Create new post
     const newPost = new Post({
-      title,
+      title: title || undefined, // Make title optional
       content,
       topicId,
       imageURL,
       userId: user._id,
-      // Thêm toàn bộ thông tin user vào post
     });
 
     await newPost.save();
 
-    // Populate thêm thông tin cho post trước khi trả về
+    // Populate user and topic info
     await newPost.populate([
-      { path: "userId", select: "fullName email profilePic" },
+      { path: "userId", select: "fullName profilePic" },
       { path: "topicId", select: "name" },
     ]);
 
-    res.status(201).json(newPost);
+    // Format response
+    const formattedPost = {
+      _id: newPost._id,
+      title: newPost.title,
+      content: newPost.content,
+      postImage: newPost.imageURL,
+      author: {
+        _id: newPost.userId._id,
+        name: newPost.userId.fullName,
+        profilePic: newPost.userId.profilePic,
+      },
+      topic: newPost.topicId.name,
+      createdAt: newPost.createdAt,
+    };
+
+    res.status(201).json(formattedPost);
   } catch (error) {
     console.error("Error in createPost:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -76,11 +106,28 @@ export const getPostsByTopic = async (req, res) => {
   try {
     const { topicId } = req.params;
     const posts = await Post.find({ topicId })
-      .populate("userId", "fullName email profilePic")
+      .select("title content imageURL createdAt") // Explicitly select fields
+      .populate("userId", "fullName profilePic")
       .populate("topicId", "name")
       .sort({ createdAt: -1 });
 
-    res.status(200).json(posts);
+    // Format the response to match Post type
+    const formattedPosts = posts.map((post) => ({
+      _id: post._id,
+      title: post.title,
+      content: post.content,
+      postImage: post.imageURL,
+      imageURL: post.imageURL,
+      author: {
+        _id: post.userId._id,
+        name: post.userId.fullName,
+        profilePic: post.userId.profilePic,
+      },
+      topic: post.topicId.name,
+      createdAt: post.createdAt,
+    }));
+
+    res.status(200).json(formattedPosts);
   } catch (error) {
     console.error("Error in getPostsByTopic:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -258,6 +305,46 @@ export const getPostById = async (req, res) => {
     res.status(200).json(formattedPost);
   } catch (error) {
     console.error("Error in getPostById:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+// Get comments in post
+export const getCommentsInPost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const comments = await Comment.find({ postId })
+      .populate("userId", "fullName profilePic")
+      .sort({ createdAt: -1 });
+
+    // Format comments response
+    const formattedComments = comments.map((comment) => ({
+      _id: comment._id,
+      content: comment.content,
+      commenter: {
+        _id: comment.userId._id,
+        name: comment.userId.fullName,
+        profilePic: comment.userId.profilePic,
+      },
+    }));
+
+    res.status(200).json(formattedComments);
+  } catch (error) {
+    console.error("Error in getCommentsInPost:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const getTopics = async (req, res) => {
+  try {
+    const topics = await Topic.find().select("_id name");
+    res.status(200).json(topics);
+  } catch (error) {
+    console.error("Error in getTopics:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

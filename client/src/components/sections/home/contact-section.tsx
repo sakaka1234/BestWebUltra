@@ -3,7 +3,9 @@ export const ContactSection = () => {
     <section className="w-full flex justify-center items-center bg-[#110F0F] py-16 relative">
       <div className="w-full max-w-4xl rounded-lg shadow-lg flex flex-col items-center py-16 px-4 border-2 border-sky-700 bg-gradient-to-tr  from-sky-900 to-black">
         <h2 className="text-4xl font-semibold mb-2 text-white">Contact</h2>
-        <p className="text-sky-200 mb-8 text-center">Any questions or requests, let us know!</p>
+        <p className="text-sky-200 mb-8 text-center">
+          Any questions or requests, let us know!
+        </p>
         <form className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md justify-center">
           <input
             type="email"
@@ -19,13 +21,6 @@ export const ContactSection = () => {
         </form>
       </div>
       {/* Go to Top Button */}
-      <a
-        href="#top"
-        className="absolute right-8 bottom-6 px-6 py-2 border-2 border-sky-400 text-sky-300 rounded-full font-semibold hover:bg-sky-400 hover:text-black transition-colors"
-        style={{ textDecoration: 'none' }}
-      >
-        GO TO TOP
-      </a>
     </section>
   );
-}
+};

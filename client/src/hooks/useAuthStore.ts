@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       const res = await apiClient.post("/auth/signup", data);
       set({ authUser: res.data });
-      localStorage.setUser("authUser", JSON.stringify(res.data));
+      localStorage.setItem("authUser", JSON.stringify(res.data));
       toast.success("Account created successfully");
       get().connectSocket();
     } catch (error) {

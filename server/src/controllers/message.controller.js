@@ -5,25 +5,18 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 import ListFriend from "../models/listfriend.model.js";
 export const getUserForSidebar = async (req, res) => {
   try {
-    const user = req.user; // Thay vì const myId = req.user._id
+    const currentUser = req.user;
 
-    const friends = await ListFriend.find({
-      $or: [
-        { userId: user._id, status: true },
-        { friendId: user._id, status: true },
-      ],
-    });
+    // Get all users except current user
+    const users = await User.find({
+      _id: { $ne: currentUser._id },
+    })
+      .select("-password") // Exclude password
+      .sort({ fullName: 1 }); // Sort by name alphabetically
 
-    const friendIds = friends.map((friend) =>
-      friend.userId.equals(user._id) ? friend.friendId : friend.userId
-    );
-
-    const friendList = await User.find({
-      _id: { $in: friendIds },
-    }).select("-password");
-    res.status(200).json(friendList);
+    res.status(200).json(users);
   } catch (error) {
-    console.error("Error in getUserForSidebar :", error);
+    console.error("Error in getUserForSidebar:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -48,34 +41,25 @@ export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
     const { id: receiverId } = req.params;
-    const sender = req.user; // Thay vì const senderId = req.user._id
+    const senderId = req.user._id;
 
-    const areFriends = await ListFriend.findOne({
-      $or: [
-        { userId: sender._id, friendId: receiverId, status: true },
-        { userId: receiverId, friendId: sender._id, status: true },
-      ],
-    });
-
-    if (!areFriends) {
-      return res
-        .status(403)
-        .json({ message: "You can only message your friends" });
-    }
-    let imageUrl;
-    if (image) {
-      const uploadResponse = await cloudinary.uploader.upload(image);
-      imageUrl = uploadResponse.secure_url;
-    }
-
+    // Create new message without checking friendship
     const newMessage = new Message({
-      senderId: sender._id,
+      senderId,
       receiverId,
       text,
-      image: imageUrl,
-      sender: sender, // Thêm thông tin người gửi
+      image,
     });
+
     await newMessage.save();
+
+    // Emit socket event
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
+
+    res.status(201).json(newMessage);
     // todo : realtime functionality goes here => socket
     const reiceiverSocketId = getReceiverSocketId(receiverId);
     if (reiceiverSocketId) {

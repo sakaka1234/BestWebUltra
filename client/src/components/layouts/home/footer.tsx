@@ -18,9 +18,12 @@ const FooterColumns: React.FC<FooterColumnsProps> = ({ columns }) => (
         <ul className="list-none p-0 m-0">
           {col.items.map((item, i) => (
             <li key={i} className="text-gray-400 mb-2.5">
-                <a href="#" className="hover:text-white transition-colors duration-300">
-                    {item}
-                </a>
+              <a
+                href="#"
+                className="hover:text-white transition-colors duration-300"
+              >
+                {item}
+              </a>
             </li>
           ))}
         </ul>
@@ -36,7 +39,9 @@ export const HomeFooter = () => {
         <FooterColumns columns={FOOTER} />
         <div className="min-w-[300px] ml-16">
           <div className="flex items-center mb-2">
-            <div className="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center font-bold text-gray-900 text-lg mr-2.5">N</div>
+            <div className="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center font-bold text-gray-900 text-lg mr-2.5">
+              N
+            </div>
             <span className="font-semibold text-white text-lg">Nexora</span>
           </div>
           <div className="text-gray-400 text-base mb-4">Get latest updates</div>
@@ -48,8 +53,8 @@ export const HomeFooter = () => {
         </div>
       </div>
       <div className="text-center text-gray-400 text-base py-[40px]">
-        Copyrigth © 20255 Nexora. All rights reserved.
+        Copyright © 2025 Nexora. All rights reserved.
       </div>
     </footer>
   );
-}
+};

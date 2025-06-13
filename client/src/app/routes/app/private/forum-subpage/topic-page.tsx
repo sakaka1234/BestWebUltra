@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 export const TopicPage = () => {
   const { topicId } = useParams();
-  const { data: posts, isLoading } = useTopicPosts(topicId as string); 
+  const { data: posts, isLoading } = useTopicPosts(topicId as string);
 
   return (
     <div className="flex flex-col flex-1 gap-[20px]">
@@ -18,7 +18,7 @@ export const TopicPage = () => {
             <PostCard
               key={post._id}
               id={post._id}
-              postImage={post.image || "link_ảnh_post"}
+              postImage={post.imageURL || "link_ảnh_post"}
               userImage={post.author.profilePic || "link_ảnh_user"}
               userName={post.author._id}
               title={post.title}

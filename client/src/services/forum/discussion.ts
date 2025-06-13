@@ -1,25 +1,31 @@
 import { apiClient } from "../../libs";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Comment, CommentReply } from "../../types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Comment, Post } from "../../types";
 
-export const getDiscussionComments = (discussionId: string) => {
-    return apiClient.get<Comment[]>(`/discussion/${discussionId}`);
+// Get comments
+export const getDiscussionComments = (postId: string) => {
+  return apiClient.get<Comment[]>(`/posts/${postId}/comments`);
 };
 
-export const useDiscussionComments = (discussionId: string) => {
-    return useQuery({
-        queryKey: ["discussion-comments", discussionId],
-        queryFn: () => getDiscussionComments(discussionId),
-    });
+export const useDiscussionComments = (postId: string) => {
+  return useQuery({
+    queryKey: ["post-comments", postId],
+    queryFn: async () => {
+      const response = await getDiscussionComments(postId);
+      return response.data;
+    },
+    enabled: !!postId,
+  });
 };
 
-export const addDiscussionComment = (discussionId: string, content: CommentReply) => {
-    return apiClient.post(`/discussion/${discussionId}`, { content });
+// Add comment
+export const addComment = (postId: string, content: string) => {
+  return apiClient.post<Comment>(`/posts/${postId}/comment`, { content });
 };
 
-export const useAddDiscussionComment = (discussionId: string) => {
-    return useMutation({
-        mutationKey: ["add-discussion-comment", discussionId],
-        mutationFn: (content: CommentReply) => addDiscussionComment(discussionId, content),
-    });
+export const useAddComment = (postId: string) => {
+  return useMutation({
+    mutationKey: ["add-discussion-comment", postId],
+    mutationFn: (content: string) => addComment(postId, content),
+  });
 };

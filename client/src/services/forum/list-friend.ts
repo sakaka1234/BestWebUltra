@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Friend } from "../../types";
 
 export const getFriendsList = () => {
-  return apiClient.get<Friend[]>("/list");
+  return apiClient.get<Friend[]>("/friends/list");
 };
 export const useFriendsList = () => {
   return useQuery({
@@ -11,4 +11,3 @@ export const useFriendsList = () => {
     queryFn: getFriendsList,
   });
 };
-

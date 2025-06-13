@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../../hooks";
-import { LogOut, MessageSquare, Settings, User, Sun, Moon } from "lucide-react";
+import { LogOut, MessageSquare, User, Sun, Moon } from "lucide-react";
 interface NavChatProps {
   isDark: boolean;
   toggleTheme: () => void;

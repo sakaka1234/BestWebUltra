@@ -6,6 +6,7 @@ import { useAuthStore } from "./useAuthStore";
 interface Message {
   _id: string;
   senderId: string;
+  receiverId: string;
   text?: string;
   image?: string;
   createdAt: string;
@@ -97,9 +98,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }
 
     socket.on("newMessage", (newMessage: Message) => {
-      const isMessageSendFromSelectedUser =
-        newMessage.senderId === selectedUser._id;
-      if (!isMessageSendFromSelectedUser) return;
+      const isRelevantMessage = newMessage.senderId === selectedUser._id;
+
+      if (!isRelevantMessage) return;
       set({ messages: [...get().messages, newMessage] });
     });
   },

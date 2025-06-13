@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiGithub, FiFacebook, FiTwitter, FiMenu, FiX } from "react-icons/fi";
 import { Link } from "react-router-dom";
 export const HeaderHome = () => {
@@ -9,8 +9,19 @@ export const HeaderHome = () => {
 
   // const openContactForm = () => setContactFormOpen(true);
   const closeContactForm = () => setContactFormOpen(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
-    <header className="absolute w-full z-50 transition-all duration-300 dark ">
+    <header
+      className={`${isScrolled ? "fixed top-0" : "absolute top-0"} w-full z-50  bg-transparent backdrop-blur-sm shadow-md transition-all duration-300`}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 md:h-20">
         {/* {logo / name } */}
         <motion.div
@@ -25,7 +36,7 @@ export const HeaderHome = () => {
           }}
           className="flex items-center"
         >
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-gray-500 to-gray-100 flex items-center justify-center text-cyan-300 font-bold text-xl mr-3">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-gray-500 to-gray-100 flex items-center justify-center text-purple-600 font-bold text-xl mr-3">
             N
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-gray-300 to-gray-100 bg-clip-text text-transparent">
@@ -46,7 +57,7 @@ export const HeaderHome = () => {
                     damping: 20,
                     delay: 0.7 + index * 0.2,
                   }}
-                  className="relative text-gray-800 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 font-medium transition-colors duration-300 group"
+                  className="relative text-gray-400 hover:text-cyan-400 font-semibold tracking-wide  text-sm lg:text-base transition-colors duration-300 group"
                 >
                   <Link to="/networking">
                     {item}
@@ -64,7 +75,7 @@ export const HeaderHome = () => {
                     damping: 20,
                     delay: 0.7 + index * 0.2,
                   }}
-                  className="relative text-gray-800 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 font-medium transition-colors duration-300 group"
+                  className="relative text-gray-400 hover:text-cyan-400 font-semibold tracking-wide text-sm lg:text-base transition-colors duration-300 group"
                   href="#"
                 >
                   {item}
@@ -174,8 +185,11 @@ export const HeaderHome = () => {
               <FiTwitter className="h-5 w-5 text-gray-300" />
             </a>
           </div>
-          <Link to={"/login"} className="mt-4 block w-full px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-violet-400 font-bold ">
-          Login
+          <Link
+            to={"/login"}
+            className="mt-4 block w-full px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-violet-400 font-bold "
+          >
+            Login
           </Link>
         </div>
       </motion.div>

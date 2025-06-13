@@ -1,99 +1,209 @@
-import { useState } from "react";
-import { X, Image, Heart, MessageCircle, Share2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Image } from "lucide-react";
+import { useAuthStore } from "../../../../hooks/useAuthStore";
+import { toast } from "react-hot-toast";
+import { getTopics, Topic, useCreatePost } from "../../../../services";
+export const CreatePost = ({ onClose }: { onClose: () => void }) => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [topicId, setTopicId] = useState("");
 
-export const CreatePost = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [postContent, setPostContent] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [isPosting, setIsPosting] = useState(false);
+  const { authUser } = useAuthStore();
+  const createPostMutation = useCreatePost();
+  const isCreatingPost = createPostMutation.isPending;
+  const resetForm = () => {
+    setTitle("");
+    setContent("");
+    setSelectedImage(null);
+    setTopicId("");
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size should be less than 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedImage(reader.result as string);
+    };
+    reader.onerror = () => {
+      toast.error("Failed to read image file");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!content.trim()) {
+      toast.error("Content is required");
+      return;
+    }
+    if (!topicId) {
+      toast.error("Please select a topic");
+      return;
+    }
+
+    try {
+      await createPostMutation.mutateAsync({
+        title: title.trim() || undefined,
+        content: content.trim(),
+        image: selectedImage || undefined,
+        topicId,
+      });
+
+      resetForm();
+      onClose();
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
 
   const handleClose = () => {
-    setIsOpen(false);
+    resetForm();
+    onClose();
   };
-
-  const handlePost = async () => {
-    if (!postContent.trim()) return;
-
-    setIsPosting(true);
-
-    // Simulate posting delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const newPost = {
-      id: Date.now(),
-      content: postContent,
-      timestamp: new Date().toLocaleString("vi-VN"),
-      likes: 0,
-      comments: 0,
-      shares: 0,
+  const [topics, setTopics] = useState<Topic[]>([]);
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const response = await getTopics();
+        setTopics(response.data);
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+        toast.error("Failed to load topics");
+      }
     };
 
-    setPosts([newPost, ...posts]);
-    setPostContent("");
-    setIsPosting(false);
-    setIsOpen(false);
-  };
-
+    fetchTopics();
+  }, []);
   return (
-    <div className="w-[450px] ">
-      <div className="bg-gray-700 rounded-lg shadow-lg">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold text-gray-100">
-            Create Your Post
-          </h2>
-          <button
-            onClick={handleClose}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={handleClose}
+    >
+      <div
+        className="bg-gray-700 rounded-lg shadow-xl w-[450px] max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <form onSubmit={handleSubmit}>
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-600">
+            <h2 className="text-lg font-semibold text-gray-100">Create Post</h2>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="p-1 hover:bg-gray-600 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-300 hover:text-gray-100" />
+            </button>
+          </div>
 
-        {/* User Info */}
-        <div className="p-4 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-orange-400 rounded-full flex items-center justify-center">
-              <span className="text-white font-medium">😎</span>
+          {/* User Info */}
+          <div className="p-4 border-b border-gray-600">
+            <div className="flex items-center space-x-3">
+              {authUser?.profilePic ? (
+                <img
+                  src={authUser.profilePic}
+                  alt=""
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center">
+                  <span className="text-xl">👤</span>
+                </div>
+              )}
+              <span className="font-medium text-gray-100">
+                {authUser?.fullName || "Anonymous"}
+              </span>
             </div>
-            <span className="font-medium text-gray-100">Xuân Tiến</span>
           </div>
-        </div>
 
-        {/* Content Area */}
-        <div className="p-4">
-          <textarea
-            value={postContent}
-            onChange={(e) => setPostContent(e.target.value)}
-            placeholder="Hey Tien, what are you thinking?"
-            className="w-full h-32 resize-none border-none outline-none placeholder-gray-400 text-lg bg-gray-600 text-gray-100 rounded-lg px-2 py-1"
-          />
-        </div>
+          {/* Post Content */}
+          <div className="p-4 space-y-4">
+            <select
+              value={topicId}
+              onChange={(e) => setTopicId(e.target.value)}
+              className="w-full p-2 bg-gray-600 text-gray-100 rounded-lg border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              required
+            >
+              <option value="">Select Topic</option>
+              {topics.map((topic) => (
+                <option key={topic._id} value={topic._id}>
+                  {topic.name}
+                </option>
+              ))}
+            </select>
 
-        {/* Action Buttons */}
-        <div className="px-4 pb-4">
-          <div className="flex items-center justify-center py-3 border bg-gray-600 border-gray-200 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer group">
-            <Image className="w-6 h-6 text-green-500 mr-2 group-hover:text-gray-600" />
-            <span className="text-gray-100 group-hover:text-gray-600 transition-colors">
-              Add image
-            </span>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Title (optional)"
+              className="w-full p-2 bg-gray-600 text-gray-100 rounded-lg border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="What's on your mind?"
+              required
+              className="w-full h-32 p-2 bg-gray-600 text-gray-100 rounded-lg border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            />
+
+            {selectedImage && (
+              <div className="relative">
+                <img
+                  src={selectedImage}
+                  alt="Preview"
+                  className="max-h-60 rounded-lg w-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSelectedImage(null)}
+                  className="absolute top-2 right-2 p-1 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            )}
+
+            {/* Image Upload */}
+            <label className="flex items-center justify-center p-2 border border-gray-500 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors group">
+              <Image className="w-5 h-5 text-gray-300 mr-2 group-hover:text-gray-100" />
+              <span className="text-gray-300 group-hover:text-gray-100">
+                Add Image
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
           </div>
-        </div>
 
-        {/* Post Button */}
-        <div className="p-4 border-t">
-          <button
-            onClick={handlePost}
-            disabled={!postContent.trim() || isPosting}
-            className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-              postContent.trim() && !isPosting
-                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                : "bg-gray-500 text-gray-400 cursor-not-allowed"
-            }`}
-          >
-            {isPosting ? "Posting..." : "Post"}
-          </button>
-        </div>
+          {/* Submit Button */}
+          <div className="p-4 border-t border-gray-600">
+            <button
+              type="submit"
+              disabled={isCreatingPost || !content.trim() || !topicId}
+              className={`w-full py-2 rounded-lg font-medium transition-colors ${
+                isCreatingPost || !content.trim() || !topicId
+                  ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600 text-white"
+              }`}
+            >
+              {isCreatingPost ? "Posting..." : "Post"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

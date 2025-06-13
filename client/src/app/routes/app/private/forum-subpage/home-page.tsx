@@ -5,7 +5,9 @@ import { useHomePosts } from "../../../../../services";
 export const HomePage = () => {
   const { data: posts, isLoading } = useHomePosts();
   const authUser = localStorage.getItem("authUser");
-  const avatarUrl = authUser ? JSON.parse(authUser).profilePic : "/images/avatar.png";
+  const avatarUrl = authUser
+    ? JSON.parse(authUser).profilePic
+    : "/images/user.png";
   return (
     <div className="flex flex-col flex-1 gap-[20px]">
       <CreatePost avatarUrl={avatarUrl} />
@@ -13,11 +15,11 @@ export const HomePage = () => {
         {isLoading ? (
           <div className="text-gray-400">Loading...</div>
         ) : (
-          posts?.data?.map((post) => (
+          posts?.map((post) => (
             <PostCard
               key={post._id}
               id={post._id}
-              postImage={post.image || "link_ảnh_post"}
+              postImage={post.imageURL || "link_ảnh_post"}
               userImage={post.author.profilePic || "link_ảnh_user"}
               userName={post.author.name}
               title={post.title}

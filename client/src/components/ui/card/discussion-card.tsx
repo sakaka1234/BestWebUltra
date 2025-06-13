@@ -1,5 +1,6 @@
-import React from "react";
-
+import { useState } from "react";
+import { useSendFriendRequest } from "../../../services";
+import { toast } from "react-hot-toast";
 interface DiscussionCardProps {
   id: string;
   userImage: string;
@@ -13,8 +14,21 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
   userName,
   comment,
 }) => {
-  const handleAddFriendClick = () => {
-      //xử lý sau
+  const [isSending, setIsSending] = useState(false);
+  const sendFriendRequestMutation = useSendFriendRequest();
+
+  const handleAddFriendClick = async () => {
+    try {
+      setIsSending(true);
+      await sendFriendRequestMutation.mutateAsync(id);
+      toast.success(`Friend request sent to ${userName}`);
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to send friend request";
+      toast.error(errorMessage);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
