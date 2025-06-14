@@ -17,7 +17,8 @@ dotenv.config();
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
 const CLIENT_URL = "http://localhost:3000";
-
+// http://localhost:3000
+// https://best-web-ultra-qi2q.vercel.app
 app.use(express.json());
 app.use(cookieParser());
 app.use(

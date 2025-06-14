@@ -243,7 +243,7 @@ export const getAllPosts = async (req, res) => {
       _id: post._id,
       title: post.title,
       content: post.content,
-      postImage: post.imageURL,
+      imageURL: post.imageURL,
       author: {
         _id: post.userId._id,
         name: post.userId.fullName,
@@ -284,7 +284,7 @@ export const getPostById = async (req, res) => {
       _id: post._id,
       title: post.title,
       content: post.content,
-      postImage: post.imageURL,
+      imageURL: post.imageURL,
       author: {
         _id: post.userId._id,
         name: post.userId.fullName,
