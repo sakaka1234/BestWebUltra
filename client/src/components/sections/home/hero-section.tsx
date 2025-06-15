@@ -1,19 +1,40 @@
 import { motion } from "framer-motion";
-import Spline from "@splinetool/react-spline";
+import { lazy, Suspense, useEffect, useState } from "react";
+import useInView from "./useinview";
+
+const LazySpline = lazy(() => import("@splinetool/react-spline"));
 
 export const HeroSection = () => {
+  const [containerRef, isInView] = useInView(0.2);
+  const [animationsCompleted, setAnimationsCompleted] = useState(false);
+
+  // Thời gian delay của animation cuối cùng + thời gian duration
+  const lastAnimationDelay = 2.3;
+  const lastAnimationDuration = 0;
+
+  useEffect(() => {
+    if (isInView) {
+      // Set timeout bằng tổng delay + duration của animation cuối cùng
+      const timer = setTimeout(
+        () => {
+          setAnimationsCompleted(true);
+        },
+        (lastAnimationDelay + lastAnimationDuration) * 1000
+      );
+
+      return () => clearTimeout(timer);
+    } else {
+      setAnimationsCompleted(false);
+    }
+  }, [isInView]);
+
   return (
-    <section className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-orange-600 flex xl:flex-row flex-col-reverse items-center justify-between lg:px-24 px-10 relative overflow-hidden">
-      {/* Left section */}
-      <div
-        className="z-40
-    max-w-5xl
-    xl:mb-0
-    mb-[20%]
-    max-sm:absolute 
-    max-sm:top-1/2 
-    max-sm:-translate-y-1/2"
-      >
+    <section
+      ref={containerRef}
+      className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-orange-600 flex xl:flex-row flex-col-reverse items-center justify-between lg:px-24 px-10 relative overflow-hidden"
+    >
+      {/* Left Section */}
+      <div className="z-40 max-w-5xl xl:mb-0 mb-[20%] max-sm:absolute max-sm:top-1/2 max-sm:-translate-y-1/2">
         <motion.h1
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,7 +71,6 @@ export const HeroSection = () => {
           employer. Nexora will empower your connection to the next level.
         </motion.p>
 
-        {/* Search section */}
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,17 +96,23 @@ export const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Right section - 3D Globe */}
-      <Spline
-        className="z-30 absolute 
-    xl:left-[27%] xl:top-[7%] 
-    max-sm:flex max-sm:-translate-y-24 max-[486px]:-translate-y-40 
-    max-sm:opacity-0 max-sm:invisible max-sm:pointer-events-none
-        "
-        scene="https://prod.spline.design/IfdOCJaJaqGNgK3X/scene.splinecode"
-      />
+      {/* Right Section - Spline Globe */}
+      {animationsCompleted && (
+        <Suspense fallback={null}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <LazySpline
+              className="z-30 absolute xl:left-[27%] xl:top-[7%] w-[500px] h-[500px] max-sm:hidden pointer-events-none"
+              scene="https://prod.spline.design/IfdOCJaJaqGNgK3X/scene.splinecode"
+            />
+          </motion.div>
+        </Suspense>
+      )}
 
-      {/* Background decorative elements */}
+      {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl"></div>
