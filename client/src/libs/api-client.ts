@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 
 export const apiClient = axios.create({
-  baseURL: "http://localhost:5001/api",
+  baseURL: "https://bestwebultra.onrender.com/api",
   withCredentials: true,
 });
 
